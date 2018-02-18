@@ -9,20 +9,6 @@ const { Header, Content, Footer, Sider } = Layout;
 
 var timer;
 
-class Tooltip extends Component {
-
-
-
-  render() {
-    var translatedStr = "Esta es un asombroso oración"
-    var translatedArr = translatedStr.split(" ");
-    return (
-      <span>
-        {translatedArr[this.props.word]}
-      </span>
-    )
-  }
-}
 
 class Word extends Component {
   constructor() {
@@ -36,33 +22,51 @@ class Word extends Component {
 	}
 
   handleHoverOn = (uid) => {
+    var translatedStr = "Esta es un asombroso oración"
+    var translatedArr = translatedStr.split(" ");
+
     timer = setTimeout(() => {
-      this.setState({
-        currentWord: uid
-      });
-      console.log(uid);
+      this.props.whenHoverOn(translatedArr[uid])
     }, 500)
 	}
 
   handleHoverOff = (evt) => {
     clearTimeout(timer);
-    this.setState({
-      currentWord: -1
-    });
+
+    this.props.whenHoverOff()
   }
 
   render() {
     return (
       <span uid={this.props.uid} onMouseOver={() => this.handleHoverOn(this.props.uid)} onMouseLeave={() => this.handleHoverOff()} >
-
         {this.props.contents}
-        {this.state.currentWord === this.props.uid? <Tooltip word={this.state.currentWord}/>: ""}
       </span>
     )
   }
 }
 
 class App extends Component {
+  constructor() {
+		super();
+
+		this.state = {
+      display: ""
+		}
+	}
+
+  whenHoverOn = (value) => {
+    this.setState({
+      display: value
+    });
+  }
+
+  whenHoverOff = () => {
+    this.setState({
+      display: ""
+    });
+  }
+
+
   render() {
     var str = "This is an amazing sentence";
     var words = str.split(" ");
@@ -70,7 +74,7 @@ class App extends Component {
     var rowsArr = [];
     for (var i = 0; i < words.length; i++) {
 				rowsArr.push(
-					<Word key={i} contents={words[i]} uid={i}/>, " "
+					<Word key={i} whenHoverOn={this.whenHoverOn} whenHoverOff={this.whenHoverOff} contents={words[i]} uid={i}/>, " "
 				);
 		}
 
@@ -82,12 +86,16 @@ class App extends Component {
             <h1 style={{color: 'white'}}>
               Hover over a word
             </h1>
+            <h2 style={{color: 'white'}}>
+              {this.state.display === ""? "": this.state.display}
+            </h2>
           </Sider>
           <Layout style={{ marginLeft: 200 }}>
             <Header style={{ background: '#fff', padding: 0 }}>
               <h1>
                 TranslatR
               </h1>
+
             </Header>
             <Content style={{ margin: '24px 16px 0', overflow: 'initial' }}>
               <div style={{ padding: 24, background: '#fff', textAlign: 'center' }}>

@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 
 
 import './App.css';
-import { Layout, Menu, Icon } from 'antd';
+import { Layout } from 'antd';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -30,6 +30,14 @@ class Word extends Component {
     }, 500)
 	}
 
+  handleClickOn = (uid) => {
+    var translatedStr = "Esta es un asombroso oración"
+    var translatedArr = translatedStr.split(" ");
+
+      this.props.whenHoverOn(translatedArr[uid])
+
+	}
+
   handleHoverOff = (evt) => {
     clearTimeout(timer);
 
@@ -38,7 +46,7 @@ class Word extends Component {
 
   render() {
     return (
-      <span uid={this.props.uid} onMouseOver={() => this.handleHoverOn(this.props.uid)} onMouseLeave={() => this.handleHoverOff()} >
+      <span uid={this.props.uid} onMouseOver={() => this.handleHoverOn(this.props.uid)} onClick={() => this.handleClickOn(this.props.uid)} onMouseLeave={() => this.handleHoverOff()} >
         {this.props.contents}
       </span>
     )
@@ -103,7 +111,7 @@ class App extends Component {
               </div>
             </Content>
             <Footer style={{ textAlign: 'center' }}>
-              Ant Design ©2016 Created by Ant UED
+              Elliott Coleman © 2018
             </Footer>
           </Layout>
         </Layout>

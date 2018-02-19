@@ -5,6 +5,16 @@ var bodyParser = require('body-parser');
 var mongoose   = require('mongoose');
 mongoose.connect('mongodb://devusr:dbPass123@ds141028.mlab.com:41028/translateapp');
 
+// Handle the connection event
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+
+db.once('open', function() {
+  console.log("DB connection alive");
+});
+
+
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
@@ -13,15 +23,16 @@ var port = process.env.PORT || 8080;
 var router = express.Router();
 
 router.get('/', function(req, res) {
-    res.json({ message: 'Base' });
+  var translateString = generateTranslateRequest("this", "yes this is an API");
+    res.json({ string: translateString });
 
-    generateTranslateRequest("yes", "yes this is an API");
+
 });
 
 app.use('/api', router);
 
 app.listen(port);
-console.log('localhost:' + port);
+console.log('listening on localhost:' + port);
 
 
 
@@ -39,8 +50,6 @@ function generateTranslateRequest(word, context, uid, story) {
     // if uid not in table
     // find word within context string, and wrap
   } else {
-    console.log(wordIndex);
-    console.log(contextArray[wordIndex]);
-    console.log(translateString);
+    return translateString;
   }
 }

@@ -59,27 +59,36 @@ class App extends Component {
 
 		this.state = {
       display: "",
+      title: "",
       content: ""
 		}
 	}
 
   componentDidMount() {
-    this.UserList();
+    this.fetchBookContent();
   }
 
-  UserList() {
-    //$.getJSON('http://localhost:8000/collection/5a8c2f042a98acfc228ed65f')
-    //  .then(({ results }) => this.setState({ content: results.content }));
+  fetchBookContent() {
     fetch('http://localhost:8000/collection/5a8c2f042a98acfc228ed65f')
     .then((result) => {
-      // Get the result
-      // If we want text, call result.text()
       return result.json();
     }).then((jsonResult) => {
-      // Do something with the result
-      //console.log(jsonResult);
-      this.setState({ content: jsonResult.content })
+      this.setState({ title: jsonResult.title, content: jsonResult.content })
     })
+
+
+
+    // fetch('https://mywebsite.com/endpoint/', {
+    //   method: 'POST',
+    //   headers: {
+    //     Accept: 'application/json',
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: JSON.stringify({
+    //     firstParam: 'yourValue',
+    //     secondParam: 'yourOtherValue',
+    //   }),
+    // });
   }
 
   whenHoverOn = (value) => {
@@ -114,9 +123,10 @@ class App extends Component {
       <Layout>
           <Sider style={{ overflow: 'auto', height: '100vh', position: 'fixed', left: 0}}>
             <h1 style={{color: 'white'}}>
-              Hover over a word
+              You are reading: {this.state.title}
             </h1>
             <h2 style={{color: 'white'}}>
+              Hover over a word for its definition <br />
               {this.state.display === ""? "": this.state.display}
             </h2>
           </Sider>

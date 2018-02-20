@@ -58,9 +58,29 @@ class App extends Component {
 		super();
 
 		this.state = {
-      display: ""
+      display: "",
+      content: ""
 		}
 	}
+
+  componentDidMount() {
+    this.UserList();
+  }
+
+  UserList() {
+    //$.getJSON('http://localhost:8000/collection/5a8c2f042a98acfc228ed65f')
+    //  .then(({ results }) => this.setState({ content: results.content }));
+    fetch('http://localhost:8000/collection/5a8c2f042a98acfc228ed65f')
+    .then((result) => {
+      // Get the result
+      // If we want text, call result.text()
+      return result.json();
+    }).then((jsonResult) => {
+      // Do something with the result
+      //console.log(jsonResult);
+      this.setState({ content: jsonResult.content })
+    })
+  }
 
   whenHoverOn = (value) => {
     this.setState({
@@ -76,7 +96,9 @@ class App extends Component {
 
 
   render() {
-    var str = "This is an amazing sentence";
+    //var str = "This is an amazing sentence";
+    var str = this.state.content;
+    // get from localhost:8000/collection/5a8c2f042a98acfc228ed65f
     var words = str.split(" ");
 
     var rowsArr = [];
